@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ПОПУТИ - Быстрая доставка продуктов от 30 минут - Заказать продукты на дом с бесплатной доставкой</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+      /* Ваши стили тут */
+      .profile-menu-dropdown {
+        position: absolute; right: 0; top: 40px;
+        background: white; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        padding: 10px; min-width: 180px; font-size: 14px; user-select: none;
+        display: none;
+        z-index: 1001;
+      }
+      .profile-menu-dropdown .menu-item {
+        cursor: pointer; padding: 8px 10px; border-radius: 6px;
+      }
+      .profile-menu-dropdown .menu-item:hover {
+        background-color: #f0f2f7;
+      }
+      .profile-avatar {
+        width: 28px; height: 28px; border-radius: 50%; vertical-align: middle;
+        margin-right: 8px;
+      }
+      .nav-link.profile-link {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        position: relative;
+        color: inherit;
+        text-decoration: none;
+      }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div class="container">
+        <div class="header-content">
+            <div class="logo">
+                <h1 class="logo-text">поПути</h1>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Найти ресторан или блюдо...">
+                <button class="search-btn">Найти</button>
+            </div>
+<nav class="nav">
+    {% if session.user %}
+    <!-- Блок для АВТОРИЗОВАННОГО пользователя -->
+    <div class="nav-link profile-link" id="profileLinkAuth">
+        {% if session.user.avatar_url %}
+        <img src="{{ session.user.avatar_url }}" alt="Аватар" class="profile-avatar">
+        {% else %}
+        <div class="profile-avatar-default">
+            {{ session.user.first_name[0] if session.user.first_name else 'П' }}
+        </div>
+        {% endif %}
+<span id="profileText">
+    {{ session.user.first_name or session.user.display_name or session.user.login or 'Профиль' }}
+</span>
+
+        <!-- Меню профиля -->
+        <div id="profileMenu" class="profile-menu-dropdown">
+            <div class="menu-item" onclick="window.location.href='/user/profile'">
+                <i class="fas fa-user" style="margin-right: 8px;"></i>Мой профиль
+            </div>
+            <div class="menu-item" onclick="window.location.href='/user/orders'">
+                <i class="fas fa-shopping-bag" style="margin-right: 8px;"></i>Мои заказы
+            </div>
+            <div class="menu-item" onclick="window.location.href='/user/favorites'">
+                <i class="fas fa-heart" style="margin-right: 8px;"></i>Избранное
+            </div>
+            <div class="menu-divider"></div>
+            <div class="menu-item" onclick="logout()" style="color: #ff4444;">
+                <i class="fas fa-sign-out-alt" style="margin-right: 8px;"></i>Выйти
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <!-- Блок для НЕАВТОРИЗОВАННОГО пользователя -->
+    <a href="#" class="nav-link profile-link" id="profileLinkNotAuth">
+        <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span>Профиль</span>
+    </a>
+    {% endif %}
+
+    <a href="#" class="nav-link cart-link">
+        <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+    </a>
+</nav>
+        </div>
+    </div>
+</header>
+
+
+<section class="promo-banner-section">
+    <div class="container">
+        <div class="banner-container">
+            <!-- Защитный overlay -->
+            <div class="banner-protection-overlay"></div>
+
+            <div class="banner-wrapper">
+                {% for banner in banners %}
+                <div class="banner-slide {% if loop.first %}active{% endif %}"
+                     data-banner-id="{{ banner.id }}"
+                     style="background-color: {{ banner.background_color }};">
+                    {% if banner.text_button %}
+                    <div class="banner-content">
+                        <h2 class="banner-title">{{ banner.title }}</h2>
+                        <p class="banner-description">{{ banner.description | replace('\n', '<br>') | safe }}</p>
+                        <!-- Обновленная кнопка с кастомным текстом -->
+                        <a href="{{ banner.link }}" class="banner-link">
+                            {{ banner.button_text if banner.button_text else "Узнать больше" }}
+                        </a>
+                    </div>
+                    {% endif %}
+
+                    <div class="banner-media {% if not banner.text_button %}full-width{% endif %}">
+                        {% if banner.type == 'video' %}
+                        <!-- Видео баннер -->
+                        <video class="banner-video" autoplay muted loop playsinline>
+                            <source src="{{ banner.video_url }}" type="video/mp4">
+                            Ваш браузер не поддерживает видео.
+                        </video>
+                        {% elif banner.type == 'gif' %}
+                        <!-- GIF баннер -->
+                        <img src="{{ banner.gif_url }}" alt="{{ banner.title }}" class="banner-gif">
+                        {% else %}
+                        <!-- Изображение баннер (по умолчанию) -->
+                        <img src="{{ banner.image_url }}" alt="{{ banner.title }}" class="banner-real-image">
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Индикаторы -->
+            <div class="banner-indicators">
+                {% for banner in banners %}
+                <span class="indicator {% if loop.first %}active{% endif %}"
+                      onclick="goToBanner({{ loop.index0 }})"></span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- Categories -->
+    <section class="categories">
+        <div class="container">
+            <h2 class="section-title">Категории</h2>
+            <div class="categories-grid">
+                {% for category in categories %}
+                <div class="category-card">
+                    <!-- Use the image URL from JSON -->
+                    <img src="{{ category.image_url }}" alt="{{ category.name }}" class="category-icon">
+                    <span class="category-name">{{ category.name }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+<!-- Добавьте этот код в ваш index.html там, где должны отображаться магазины -->
+
+<section class="stores-section">
+    <div class="container">
+        <h2 class="section-title">Все магазины</h2>
+
+        {% if stores_by_category %}
+            {% for category, stores in stores_by_category.items() %}
+                {% if stores %}
+                <div class="category-section">
+                    <h3 class="category-title">{{ category }}</h3>
+                    <div class="stores-grid">
+                        {% for store in stores %}
+                        <div class="store-card" data-category="{{ store.category }}">
+                            <div class="store-image-container">
+                                <img src="{{ store.image_url }}" alt="{{ store.name }}" class="store-image"
+                                     onerror="this.src='/static/images/default-store.jpg'">
+                            </div>
+
+                            <div class="store-info">
+                                <!-- Заголовок и рейтинг в одной строке -->
+                                <div class="store-header">
+                                    <h3 class="store-name">{{ store.name }}</h3>
+                                    <div class="store-rating">
+                                        <div class="rating-with-star">
+                                            <span class="star-icon"></span>
+                                            <span>{{ store.rating }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Время доставки с подсказкой -->
+                                <div class="store-delivery-time">
+                                    <span>{{ store.delivery_time }}</span>
+                                    <span class="delivery-info-icon" title="Примерное время доставки">( i )</span>
+                                </div>
+
+                                <!-- ТЕГИ вместо деталей заказа -->
+                                {% if store.tags and store.tags|length > 0 %}
+                                <div class="store-tags">
+                                    {% for tag in store.tags[:3] %}  <!-- Максимум 3 тега -->
+                                    <span class="store-tag {{ tag.color }}">{{ tag.text }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+        <div class="stores-empty">
+            <div class="stores-empty-icon">🏪</div>
+            <h3>Магазинов пока нет</h3>
+            <p>Скоро здесь появятся интересные предложения</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<div id="authModal" class="auth-modal">
+    <div class="auth-modal-content tall-modal">
+        <button class="auth-modal-close">&times;</button>
+
+<h2 class="auth-modal-title">Походу мы не знакомы
+  <img src="/static/images/gryst.png" alt="Лого" class="auth-modal-logo">
+</h2>
+        <p class="auth-modal-subtitle">Давайте исправим это :D</p>
+
+<button class="yandex-auth-btn" onclick="loginWithYandex()">
+  <img src="/static/images/ya.png" alt="Лого Яндекс" class="yandex-btn-logo">
+  Войти по Яндекс ID
+</button>
+
+
+
+        <!-- Текст соглашения вместо чекбоксов -->
+        <p class="auth-agreement-text">
+            Регистрируясь на нашем сервисе, вы соглашаетесь с <a href="#" target="_blank">условиями использования</a> и <a href="#" target="_blank">политикой конфиденциальности</a>.
+        </p>
+
+        <!-- УБИРАЕМ разделитель и кнопку продолжить -->
+    </div>
+</div>
+
+
+<footer class="footer">
+    <div class="footer-container">
+        <!-- Логотип в левом верхнем углу -->
+        <div class="footer-logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="поПути">
+        </div>
+
+        <!-- Соцсети в правом верхнем углу -->
+        <div class="footer-social">
+            <a href="#" aria-label="ВКонтакте"><i class="fab fa-vk"></i></a>
+            <a href="#" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
+        </div>
+
+        <!-- Основные ссылки в 3 колонки -->
+        <div class="footer-links">
+            <div class="link-column">
+                <a href="#" class="footer-link">Ответы на вопросы</a>
+                <a href="#" class="footer-link">Контакты</a>
+                <a href="#" class="footer-link">Работа в Попути</a>
+            </div>
+            <div class="link-column">
+                <a href="#" class="footer-link">Умный импорт</a>
+                <a href="#" class="footer-link">Стать курьером-партнёром</a>
+                <a href="#" class="footer-link">Линия доверия ПоПути</a>
+            </div>
+            <div class="link-column">
+                <a href="#" class="footer-link">Правила и соглашения</a>
+                <a href="#" class="footer-link">Политика конфиденциальности</a>
+            </div>
+        </div>
+
+        <!-- Юридическая информация -->
+        <div class="footer-legal">
+            <p class="legal-text">
+                Зона, время, товары и предложения доставки ограничены. Организатор, продавец ООО «Сон Которые Работает - СОНВОРК» ОГРН 1177847261602, 121087, Москва, вн.г.тер. муниципальный округ Филёвский парк, ул. Барклая, д. 6, стр. 3, помещ. 8Н/4. Информационные услуги оказываются ООО «Умное пространство» ОГРН 1137847232852, 121087, Москва, вн.г.тер. муниципальный округ Филёвский парк, ул. Барклая, д. 6, стр. 3, помещ. 8Н/4
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script>
+// ============================================
+// ПОЛНЫЙ БЛОК СКРИПТОВ ДЛЯ INDEX.HTML
+// ============================================
+
+// === ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ===
+let currentBannerIndex = 0;
+let bannerInterval;
+const bannerSlides = document.querySelectorAll('.banner-slide');
+const totalBanners = bannerSlides.length;
+
+// === ФУНКЦИИ АВТОРИЗАЦИИ ===
+function logout() {
+    if (confirm('Вы уверены, что хотите выйти?')) {
+        window.location.href = '/auth/logout';
+    }
+}
+
+function loginWithYandex() {
+    window.location.href = '/auth/yandex';
+}
+
+// === ФУНКЦИИ МОДАЛЬНОГО ОКНА ===
+function openAuthModal() {
+    const authModal = document.getElementById('authModal');
+    if (authModal) {
+        authModal.style.display = 'flex';
+        document.body.classList.add('modal-open');
+        setTimeout(() => authModal.classList.add('active'), 10);
+    }
+}
+
+function closeAuthModal() {
+    const authModal = document.getElementById('authModal');
+    if (authModal) {
+        authModal.classList.remove('active');
+        setTimeout(() => {
+            authModal.style.display = 'none';
+            document.body.classList.remove('modal-open');
+        }, 300);
+    }
+}
+
+// === ФУНКЦИИ БАННЕРОВ ===
+function goToBanner(index) {
+    stopCurrentMedia();
+    bannerSlides[currentBannerIndex].classList.remove('active');
+    currentBannerIndex = index;
+    bannerSlides[currentBannerIndex].classList.add('active');
+    playCurrentMedia();
+    updateIndicators();
+    resetInterval();
+}
+
+function stopCurrentMedia() {
+    const currentSlide = bannerSlides[currentBannerIndex];
+    const video = currentSlide.querySelector('.banner-video');
+    if (video) {
+        video.pause();
+        video.currentTime = 0;
+    }
+}
+
+function playCurrentMedia() {
+    const currentSlide = bannerSlides[currentBannerIndex];
+    const video = currentSlide.querySelector('.banner-video');
+    if (video) {
+        video.play().catch(e => console.log('Автовоспроизведение заблокировано:', e));
+    }
+}
+
+function updateIndicators() {
+    document.querySelectorAll('.indicator').forEach((indicator, index) => {
+        indicator.classList.toggle('active', index === currentBannerIndex);
+    });
+}
+
+function resetInterval() {
+    clearInterval(bannerInterval);
+    bannerInterval = setInterval(() => {
+        goToBanner((currentBannerIndex + 1) % totalBanners);
+    }, 10000);
+}
+
+// === ФУНКЦИЯ ПРОВЕРКИ УВЕДОМЛЕНИЙ ===
+function checkForNotification() {
+    fetch('/get_notification')
+        .then(response => response.json())
+        .then(data => {
+            console.log("🔔 Ответ сервера:", data);
+
+            if (data.show && "Notification" in window && Notification.permission === "granted") {
+                const icon = data.icon || '🎁';
+                const title = `${icon} ${data.title || 'попути'}`;
+
+                const notification = new Notification(title, {
+                    body: data.message,
+                    icon: '/static/logo.png',
+                    badge: '/static/logo.png',
+                    tag: data.type || 'general'
+                });
+
+                notification.onclick = function() {
+                    window.focus();
+                    this.close();
+                };
+
+                setTimeout(() => {
+                    notification.close();
+                }, 7000);
+            }
+        })
+        .catch(error => console.error('❌ Ошибка:', error));
+}
+
+// === ГЛАВНАЯ ИНИЦИАЛИЗАЦИЯ ===
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Запуск приложения...');
+
+    // === ПРОФИЛЬ АВТОРИЗОВАННОГО ПОЛЬЗОВАТЕЛЯ ===
+    const profileLinkAuth = document.getElementById('profileLinkAuth');
+    const profileMenu = document.getElementById('profileMenu');
+
+    if (profileLinkAuth && profileMenu) {
+        console.log('✅ Пользователь АВТОРИЗОВАН');
+
+        profileLinkAuth.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            console.log('🖱️ Клик по профилю!');
+
+            if (profileMenu.style.display === 'block') {
+                profileMenu.style.display = 'none';
+                console.log('❌ Закрыли меню');
+            } else {
+                profileMenu.style.display = 'block';
+                console.log('✅ Открыли меню');
+            }
+        });
+
+        // Закрытие меню при клике вне
+        document.addEventListener('click', function(e) {
+            if (!profileLinkAuth.contains(e.target) && !profileMenu.contains(e.target)) {
+                profileMenu.style.display = 'none';
+            }
+        });
+
+        // Закрытие при Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                profileMenu.style.display = 'none';
+            }
+        });
+
+        // Плавное закрытие при скролле
+        let scrollTimeout;
+        window.addEventListener('scroll', function() {
+            if (profileMenu.style.display === 'block') {
+                // Добавляем класс для плавного исчезновения
+                profileMenu.style.opacity = '0';
+                profileMenu.style.transform = 'translateY(-10px)';
+
+                // Очищаем предыдущий таймаут
+                clearTimeout(scrollTimeout);
+
+                // Полностью скрываем через 200мс (время анимации)
+                scrollTimeout = setTimeout(() => {
+                    profileMenu.style.display = 'none';
+                    profileMenu.style.opacity = '1';
+                    profileMenu.style.transform = 'translateY(0)';
+                }, 200);
+
+                console.log('📜 Меню закрыто при скролле');
+            }
+        });
+    }
+
+    // === ПРОФИЛЬ НЕАВТОРИЗОВАННОГО ПОЛЬЗОВАТЕЛЯ ===
+    const profileLinkNotAuth = document.getElementById('profileLinkNotAuth');
+    if (profileLinkNotAuth) {
+        console.log('ℹ️ Пользователь НЕ авторизован');
+
+        profileLinkNotAuth.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('🖱️ Открываем модалку авторизации');
+            openAuthModal();
+        });
+    }
+
+    // === МОДАЛЬНОЕ ОКНО ===
+    const authModal = document.getElementById('authModal');
+    const authModalClose = document.querySelector('.auth-modal-close');
+
+    if (authModalClose) {
+        authModalClose.addEventListener('click', closeAuthModal);
+    }
+
+    if (authModal) {
+        authModal.addEventListener('click', function(e) {
+            if (e.target === authModal) closeAuthModal();
+        });
+    }
+
+    // === БАННЕРЫ ===
+    const bannerContainer = document.querySelector('.banner-container');
+    if (bannerContainer) {
+        bannerContainer.addEventListener('contextmenu', e => e.preventDefault());
+        bannerContainer.addEventListener('dragstart', e => e.preventDefault());
+        bannerContainer.addEventListener('selectstart', e => e.preventDefault());
+
+        resetInterval();
+        playCurrentMedia();
+
+        bannerContainer.addEventListener('mouseenter', () => {
+            clearInterval(bannerInterval);
+            const video = bannerSlides[currentBannerIndex].querySelector('.banner-video');
+            if (video) video.pause();
+        });
+
+        bannerContainer.addEventListener('mouseleave', () => {
+            resetInterval();
+            const video = bannerSlides[currentBannerIndex].querySelector('.banner-video');
+            if (video) video.play().catch(e => console.log('Автовоспроизведение заблокировано'));
+        });
+    }
+
+    // === УВЕДОМЛЕНИЯ ===
+    // Автоматический запрос разрешения (раскомментируйте если нужно)
+    // setTimeout(() => {
+    //     if ("Notification" in window && Notification.permission === "default") {
+    //         Notification.requestPermission();
+    //     }
+    // }, 3000);
+
+    // Проверяем уведомления
+    setInterval(checkForNotification, 60000); // Каждую минуту
+    setTimeout(checkForNotification, 2000);   // Первая проверка через 2 секунды
+
+    console.log('✅ Инициализация завершена!');
+});
+</script>
+
+
+</body>
+</html>

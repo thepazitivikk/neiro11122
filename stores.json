@@ -1,0 +1,200 @@
+{
+  "stores": [
+    {
+      "id": 1,
+      "name": "ROSTIC’S",
+      "category": "Рестораны",
+      "description": "Ростикс",
+      "image_url": "static/eda/rost.jpeg",
+      "delivery_time": "20 - 30 минут",
+      "rating": 4.7,
+      "min_order": "900 ₽",
+      "delivery_price": "Бесплатно",
+      "active": true,
+      "created_at": "2025-10-14T00:04:36.865292",
+      "created_by": "vh374290@gmail.com",
+      "tags": [
+        {
+          "text": "Привезем горячим",
+          "color": "warning"
+        },
+        {
+          "text": "Выбор пользователей",
+          "color": "success"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Вкусно и Точка",
+      "category": "Рестораны",
+      "description": "Вкусно и точка",
+      "image_url": "/static/eda/toch.png",
+      "delivery_time": "50 - 75 минут",
+      "rating": 4.6,
+      "min_order": "1100",
+      "delivery_price": "Бесплатно",
+      "active": true,
+      "created_at": "2025-10-14T00:12:36.760809",
+      "created_by": "vh374290@gmail.com",
+      "tags": [
+        {
+          "text": "Привезем горячим",
+          "color": "warning"
+        },
+        {
+          "text": "Как в городе, но ближе",
+          "color": "info"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Бургер кинг",
+      "category": "Рестораны",
+      "description": "Бургер кинг",
+      "image_url": "/static/eda/burger.png",
+      "delivery_time": "25 - 35 мин",
+      "rating": 4.7,
+      "min_order": "1000 ₽",
+      "delivery_price": "Бесплатно",
+      "active": true,
+      "created_at": "2025-10-14T00:45:33.340533",
+      "created_by": "vh374290@gmail.com",
+      "tags": [
+        {
+          "text": "Привезем горячим",
+          "color": "warning"
+        },
+        {
+          "text": "Скидка 20%",
+          "color": "danger"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Суши Маркет",
+      "category": "Рестораны",
+      "description": "Суши Маркет",
+      "image_url": "/static/eda/sushmark.jpg",
+      "delivery_time": "45 - 55 мин",
+      "rating": 4.3,
+      "min_order": "900 ₽",
+      "delivery_price": "Бесплатно",
+      "active": true,
+      "created_at": "2025-10-14T00:53:18.300202",
+      "created_by": "vh374290@gmail.com",
+      "tags": [
+        {
+          "text": "Привезем свежим",
+          "color": "dark"
+        },
+        {
+          "text": "Морской вайб",
+          "color": "info"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "АПРЕЛЬ Аптека",
+      "category": "Аптеки",
+      "description": "АПРЕЛЬ Аптека",
+      "image_url": "static/eda/eapt.jpeg",
+      "delivery_time": "30 - 40 мин",
+      "rating": 4.7,
+      "min_order": "1000 ₽",
+      "delivery_price": "Бесплатно",
+      "active": true,
+      "created_at": "2025-10-14T01:03:03.207306",
+      "created_by": "vh374290@gmail.com",
+      "tags": [
+        {
+          "text": "Только качественное",
+          "color": "success"
+        },
+        {
+          "text": "Быстрая доставка",
+          "color": "dark"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Магнит Семейный ",
+      "category": "Продукты",
+      "description": "Магнит Семейный ",
+      "image_url": "static/eda/magiper.png",
+      "delivery_time": "20 - 30 мин",
+      "rating": 4.8,
+      "min_order": "700 ₽",
+      "delivery_price": "Бесплатно",
+      "active": true,
+      "created_at": "2025-10-14T01:10:13.624418",
+      "created_by": "vh374290@gmail.com",
+      "tags": [
+        {
+          "text": "Лучший выбор",
+          "color": "danger"
+        },
+        {
+          "text": "Быстрая доставка",
+          "color": "dark"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Гипер Лента",
+      "category": "Продукты",
+      "description": "Гипер лента",
+      "image_url": "/static/eda/giplenta.jpg",
+      "delivery_time": "60 - 90 мин",
+      "rating": 4.5,
+      "min_order": "1500 ₽",
+      "delivery_price": "Бесплатно",
+      "active": true,
+      "created_at": "2025-10-14T01:15:23.433342",
+      "created_by": "vh374290@gmail.com",
+      "tags": [
+        {
+          "text": "Лучший выбор",
+          "color": "danger"
+        },
+        {
+          "text": "Как в городе, но ближе",
+          "color": "primary"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Монетка",
+      "category": "Продукты",
+      "description": "Монетка",
+      "image_url": "/static/eda/monet.png",
+      "delivery_time": "20 - 25 мин",
+      "rating": 4.7,
+      "min_order": "600 ₽",
+      "delivery_price": "Бесплатно",
+      "active": true,
+      "created_at": "2025-10-14T01:23:31.085680",
+      "created_by": "vh374290@gmail.com",
+      "tags": [
+        {
+          "text": "Лучший выбор",
+          "color": "warning"
+        },
+        {
+          "text": "Быстрая доставка",
+          "color": "dark"
+        },
+        {
+          "text": "Скидки",
+          "color": "danger"
+        }
+      ]
+    }
+  ]
+}

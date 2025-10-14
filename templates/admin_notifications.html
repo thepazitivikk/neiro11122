@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Уведомления - поПути</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+</head>
+<body class="admin-dashboard">
+    <header class="dashboard-header">
+        <nav class="dashboard-nav">
+            <div class="dashboard-brand">поПути | Уведомления</div>
+            <div class="dashboard-user">
+                {{ session.admin_session.name }}
+                <a href="{{ url_for('admin_logout') }}" class="dashboard-logout">Выйти</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="dashboard-main">
+        <a href="{{ url_for('admin_dashboard') }}" class="back-link">← Назад в панель управления</a>
+
+        <div class="form-card">
+            <h2 class="form-title">Отправить уведомление</h2>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'error' if category == 'error' else 'success' }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST">
+                <div class="form-group">
+                    <label class="form-label">Заголовок</label>
+                    <input type="text" class="form-input" name="title" value="попути" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Сообщение</label>
+                    <textarea class="textarea" name="message" placeholder="Введите текст уведомления..." required></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Отправить уведомление</button>
+                    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">Отмена</a>
+                </div>
+            </form>
+        </div>
+        <div class="form-card" style="margin-top: 30px;">
+    <h2 class="form-title">История уведомлений</h2>
+
+    {% if notifications %}
+        <div style="max-height: 400px; overflow-y: auto;">
+            {% for notification in notifications|reverse %}
+            <div class="notification-item" style="background: #f8f9fa; padding: 15px; margin: 10px 0; border-radius: 8px; border-left: 4px solid #0098E8;">
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <div>
+                        <strong>{{ notification.title }}</strong>
+                        <p style="margin: 5px 0; color: #333;">{{ notification.message }}</p>
+                        <small style="color: #666;">
+                            {{ notification.created_at[:16]|replace('T', ' ') }} •
+                            От: {{ notification.sent_by }}
+                        </small>
+                    </div>
+                    <span style="background: {{ '#28a745' if notification.active else '#6c757d' }}; color: white; padding: 4px 8px; border-radius: 12px; font-size: 12px;">
+                        {{ 'Активно' if notification.active else 'Неактивно' }}
+                    </span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            Пока нет отправленных уведомлений.
+        </div>
+    {% endif %}
+</div>
+    </main>
+</body>
+</html>

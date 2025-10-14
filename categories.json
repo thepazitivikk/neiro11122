@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Рестораны",
+    "image_url": "/static/images/1.png"
+  },
+  {
+    "name": "Аптеки",
+    "image_url": "/static/images/2.png"
+  },
+  {
+    "name": "Продукты",
+    "image_url": "/static/images/3.png"
+  },
+  {
+    "name": "Косметика",
+    "image_url": "/static/images/6.png"
+  },
+  {
+    "name": "Быстрее всего",
+    "image_url": "/static/images/4.png"
+  },
+  {
+    "name": "Для детей",
+    "image_url": "/static/images/5.png"
+  }
+]

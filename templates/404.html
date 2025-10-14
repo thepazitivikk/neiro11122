@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-user-drag: none;
+            -moz-user-drag: none;
+            -ms-user-drag: none;
+            user-drag: none;
+            -webkit-touch-callout: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: #ffffff;
+            color: #000000;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            position: relative;
+        }
+
+        .error-container {
+            text-align: center;
+            max-width: 700px;
+            width: 100%;
+            margin: 0 auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .logo {
+            margin-bottom: 40px;
+        }
+
+        .logo img {
+            max-width: 200px;
+            height: auto;
+        }
+
+        .message-container {
+            margin-bottom: 40px;
+        }
+
+        .main-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+
+        .sub-text {
+            font-size: 18px;
+            color: #666666;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .button-container {
+            position: fixed;
+            bottom: 60px; /* Изменено с 40px на 60px - кнопка выше */
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            padding: 0 20px;
+        }
+
+        .home-button {
+            display: inline-block;
+            padding: 16px 32px;
+            background: #e0e0e0; /* Изменено с #f5f5f5 на #e0e0e0 - темнее */
+            color: #555555; /* Изменено с #000000 на #555555 - светлее */
+            text-decoration: none;
+            border-radius: 20px; /* Изменено с 12px на 20px - более закругленная */
+            font-size: 16px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+            max-width: 280px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .home-button:hover {
+            background: #d0d0d0; /* Изменено с #e8e8e8 на #d0d0d0 */
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .home-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Альтернативный вариант с абсолютным позиционированием */
+        /*
+        .button-container {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 280px;
+            padding: 0 20px;
+        }
+        */
+
+        /* Адаптивность */
+        @media (max-width: 480px) {
+            .main-title {
+                font-size: 28px;
+            }
+
+            .sub-text {
+                font-size: 16px;
+            }
+
+            .logo img {
+                max-width: 160px;
+            }
+
+            .home-button {
+                padding: 14px 28px;
+                font-size: 15px;
+                border-radius: 18px; /* Немного меньше закругление на мобильных */
+            }
+
+            .button-container {
+                bottom: 40px; /* Немного выше на мобильных */
+            }
+        }
+
+        @media (max-height: 600px) {
+            .button-container {
+                position: relative;
+                bottom: auto;
+                margin-top: 40px;
+            }
+
+            .error-container {
+                justify-content: flex-start;
+                padding-top: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <!-- Логотип -->
+        <div class="logo">
+            <img src="{{ url_for('static', filename='404/404.png') }}" alt="поПути" onerror="this.style.display='none'">
+        </div>
+
+        <!-- Текстовое сообщение -->
+        <div class="message-container">
+            <h1 class="main-title">Ничего такого не нашлось</h1>
+            <p class="sub-text">Похоже, страницы больше нет.</p>
+            <p class="sub-text">Можно перейти на главную</p>
+        </div>
+    </div>
+
+    <!-- Кнопка внизу -->
+    <div class="button-container">
+        <button class="home-button" onclick="goHome()">
+            Вернуться на главную
+        </button>
+    </div>
+
+    <script>
+        function goHome() {
+            window.location.href = "{{ url_for('home') }}";
+        }
+
+        // Авто-редирект через 10 секунд
+        setTimeout(() => {
+            goHome();
+        }, 30000);
+
+        // Адаптация для очень маленьких экранов
+        function adjustLayout() {
+            const container = document.querySelector('.error-container');
+            const buttonContainer = document.querySelector('.button-container');
+
+            if (window.innerHeight < 500) {
+                buttonContainer.style.position = 'relative';
+                buttonContainer.style.marginTop = '40px';
+            }
+        }
+
+        window.addEventListener('resize', adjustLayout);
+        adjustLayout();
+    </script>
+</body>
+</html>

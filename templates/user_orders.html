@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мои заказы - поПути</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Вставьте тот же header что и в index.html -->
+
+    <div class="container" style="padding: 40px 20px;">
+        <h1>Мои заказы</h1>
+        <div class="orders-empty">
+            <div class="orders-empty-icon">📦</div>
+            <h3>Заказов пока нет</h3>
+            <p>Сделайте свой первый заказ и он появится здесь</p>
+            <a href="/" class="banner-link" style="margin-top: 20px;">Сделать заказ</a>
+        </div>
+    </div>
+</body>
+</html>
